@@ -5,7 +5,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShowNodes", "ShowNodes\Show
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsulSamples", "ConsulSamples\ConsulSamples.csproj", "{B1A7D560-5799-4310-87CD-9FE86ACE74B9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyService", "MyService\MyService.csproj", "{C6B896F4-C084-4217-8512-5DA894BFB190}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi", "WebApi\WebApi.csproj", "{2D15927F-08C5-4D7B-864E-6BCFDBA5DC13}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,9 +21,9 @@ Global
 		{B1A7D560-5799-4310-87CD-9FE86ACE74B9}.Debug|x86.Build.0 = Debug|x86
 		{B1A7D560-5799-4310-87CD-9FE86ACE74B9}.Release|x86.ActiveCfg = Release|x86
 		{B1A7D560-5799-4310-87CD-9FE86ACE74B9}.Release|x86.Build.0 = Release|x86
-		{C6B896F4-C084-4217-8512-5DA894BFB190}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{C6B896F4-C084-4217-8512-5DA894BFB190}.Debug|x86.Build.0 = Debug|Any CPU
-		{C6B896F4-C084-4217-8512-5DA894BFB190}.Release|x86.ActiveCfg = Release|Any CPU
-		{C6B896F4-C084-4217-8512-5DA894BFB190}.Release|x86.Build.0 = Release|Any CPU
+		{2D15927F-08C5-4D7B-864E-6BCFDBA5DC13}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2D15927F-08C5-4D7B-864E-6BCFDBA5DC13}.Debug|x86.Build.0 = Debug|Any CPU
+		{2D15927F-08C5-4D7B-864E-6BCFDBA5DC13}.Release|x86.ActiveCfg = Release|Any CPU
+		{2D15927F-08C5-4D7B-864E-6BCFDBA5DC13}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

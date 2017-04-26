@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-
+using Consul;
 using DnsClient;
 
 namespace ConsulSamples
@@ -34,6 +34,16 @@ namespace ConsulSamples
                         ShowMenu();
                         break;
 
+                    case "ds":
+                    case "deleteservice":
+                        DeleteService().GetAwaiter().GetResult();
+                        break;
+
+                        case "di":
+                        case "deleteserviceinstance":
+                        DeleteServiceInstance().GetAwaiter().GetResult();
+                        break;
+
 					case "gs":
 					case "getservice":
                         GetService().GetAwaiter().GetResult();
@@ -54,6 +64,11 @@ namespace ConsulSamples
 						ListServices().GetAwaiter().GetResult();
 						break;
 
+                    case "rs":
+                    case "registerservice":
+                        RegisterService().GetAwaiter().GetResult();
+                        break;
+
 					case "q":
                     case "quit":
                         quitRequested = true;
@@ -66,10 +81,68 @@ namespace ConsulSamples
         {
 			Console.WriteLine("Available Commands:");
             Console.WriteLine("===================");
-            Console.WriteLine("ln / ListNodes - Lists the nodes in the cluster");
-			Console.WriteLine("ls / ListServices - Lists the services registered");
-			Console.WriteLine("gs / GetService - Gets the instances of a registered service");
-            Console.WriteLine("gd / GetServiceByDns - Gets DNS entries for all instances of a regustered service.");
+            Console.WriteLine("ds / DeleteService - Delete all instances of a service");
+			Console.WriteLine("di / DeleteServiceInstance - Delete a specific service instance");
+			Console.WriteLine("gd / GetServiceByDns - Gets DNS entries for all instances of a regustered service.");
+            Console.WriteLine("gs / GetService - Gets the instances of a registered service");
+			Console.WriteLine("ln / ListNodes - Lists the nodes in the cluster");
+			Console.WriteLine("ls / ListServices - Lists the services registered"); 
+            Console.WriteLine("rs / RegisterService - Register a new service");
+        }
+
+        public static async Task DeleteService()
+        {
+            Console.Write("Service >");
+            var serviceName = Console.ReadLine();
+
+            using (var client = new Consul.ConsulClient())
+            {
+				var serviceResult = await client.Catalog.Service(serviceName);
+				var service = serviceResult.Response;
+
+				foreach (var serviceInstance in service)
+                {
+                    var result = await client.Agent.ServiceDeregister(serviceInstance.ServiceID);
+                    Console.WriteLine($" - {serviceInstance.ServiceID} - {result.StatusCode}");
+                }
+            }
+        }
+
+        public static async Task DeleteServiceInstance()
+        {
+            Console.Write("Service Id >");
+            var serviceId = Console.ReadLine();
+
+            using (var client = new Consul.ConsulClient())
+			{
+				var result = await client.Agent.ServiceDeregister(serviceId);
+				Console.WriteLine($" - {result.StatusCode}");
+			}
+        }
+
+        public static async Task RegisterService()
+        {
+            Console.Write("Service >");
+            var serviceName = Console.ReadLine();
+            Console.Write("Address >");
+            var serviceAddress = Console.ReadLine();
+            Console.Write("Port >");
+            var servicePort = Convert.ToInt16(Console.ReadLine());
+
+			var registration = new AgentServiceRegistration()
+			{
+				ID = $"{serviceName}-{Guid.NewGuid()}",
+				Name = serviceName,
+				Address = $"http://{serviceAddress}",
+				Port = servicePort,
+				Tags = new[] { "Flibble", "Wotsit", "Aardvark" }
+			};
+
+            using (var client = new Consul.ConsulClient())
+            {
+                var result = await client.Agent.ServiceRegister(registration);
+                Console.WriteLine($" - {result.StatusCode}");
+            }
         }
 
 		public static async Task ListNodes()
