@@ -54,7 +54,15 @@ namespace WebApi
 				Name = "WebApi",
                 Address = $"{serverAddress.Scheme}://{serverAddress.Host}",
 				Port = serverAddress.Port,
-				Tags = new[] { "Flibble", "Wotsit", "Aardvark" }
+				Tags = new[] { "Flibble", "Wotsit", "Aardvark" },
+                Checks = new AgentServiceCheck[] {
+                    new AgentCheckRegistration()
+                {
+                    HTTP = $"{serverAddress.Scheme}://{serverAddress.Host}:{serverAddress.Port}/api/health/status",
+                    Notes = "Checks /health/status on localhost",
+                    Timeout = TimeSpan.FromSeconds(3),
+                    Interval = TimeSpan.FromSeconds(10)
+                    }}
 			};
 
 			var consulClient = app.ApplicationServices

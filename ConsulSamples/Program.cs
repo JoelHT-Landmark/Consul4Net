@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 using Consul;
 using DnsClient;
@@ -34,6 +35,26 @@ namespace ConsulSamples
                         ShowMenu();
                         break;
 
+                    case "ak":
+                    case "addkeyvalue":
+                        AddKeyValue().GetAwaiter().GetResult();
+                        break;
+
+                    case "lk":
+                    case "listkeys":
+                        ListKeys().GetAwaiter().GetResult();
+                        break;
+
+                    case "dk":
+                    case "deletekeyvalue":
+                        DeleteKeyValue().GetAwaiter().GetResult();
+                        break;
+
+					case "gk":
+					case "getkeyvalue":
+						GetKeyValue().GetAwaiter().GetResult();
+						break;
+					
                     case "ds":
                     case "deleteservice":
                         DeleteService().GetAwaiter().GetResult();
@@ -81,14 +102,73 @@ namespace ConsulSamples
         {
 			Console.WriteLine("Available Commands:");
             Console.WriteLine("===================");
-            Console.WriteLine("ds / DeleteService - Delete all instances of a service");
+            Console.WriteLine("ak / AddKeyValue - Adds a key/value pair to the Consul KV store.");
+			Console.WriteLine("dk / DeleteKeyValue - Deletes a key/value pair from the Consul KV store.");
+			Console.WriteLine("ds / DeleteService - Delete all instances of a service");
 			Console.WriteLine("di / DeleteServiceInstance - Delete a specific service instance");
 			Console.WriteLine("gd / GetServiceByDns - Gets DNS entries for all instances of a regustered service.");
-            Console.WriteLine("gs / GetService - Gets the instances of a registered service");
+			Console.WriteLine("gk / GetKeyValue - Gets a key/value pair to the Consul KV store.");
+			Console.WriteLine("gs / GetService - Gets the instances of a registered service");
+			Console.WriteLine("lk / ListKeys - Lists the keys currently in the Consul KV store.");
 			Console.WriteLine("ln / ListNodes - Lists the nodes in the cluster");
 			Console.WriteLine("ls / ListServices - Lists the services registered"); 
             Console.WriteLine("rs / RegisterService - Register a new service");
         }
+
+        public static async Task AddKeyValue()
+        {
+			Console.Write("Key >");
+			var keyName = Console.ReadLine();
+
+            Console.Write("Value >");
+            var dataValue = Console.ReadLine();
+
+			using (var client = new Consul.ConsulClient())
+			{
+                var data = Encoding.UTF8.GetBytes(dataValue);
+                var result = await client.KV.Put(new KVPair(keyName) { Value = data });
+				Console.WriteLine($" - {result.StatusCode}");
+			}
+		}
+
+        public static async Task GetKeyValue()
+        {
+			Console.Write("Key >");
+			var keyName = Console.ReadLine();
+
+            using (var client = new Consul.ConsulClient())
+            {
+                var result = await client.KV.Get(keyName);
+                Console.WriteLine($" - {Encoding.UTF8.GetString(result.Response.Value)}");
+            }
+        }
+
+        public static async Task ListKeys()
+        {
+            using (var client = new Consul.ConsulClient())
+			{
+                var nodesResult = await client.KV.List(string.Empty);
+				var nodes = nodesResult.Response;
+
+				foreach (var node in nodes)
+				{
+                    Console.WriteLine($"{node.Key}");
+				}
+			}            
+        }
+
+        public static async Task DeleteKeyValue()
+        {
+			Console.Write("Key >");
+			var keyName = Console.ReadLine();
+
+			using (var client = new Consul.ConsulClient())
+			{
+                var result = await client.KV.Delete(keyName);
+				Console.WriteLine($" - {result.StatusCode}");
+			}
+
+		}
 
         public static async Task DeleteService()
         {
