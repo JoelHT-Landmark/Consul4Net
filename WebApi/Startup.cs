@@ -50,8 +50,8 @@ namespace WebApi
 			// Register service with consul
 			var registration = new AgentServiceRegistration()
 			{
-                ID = $"WebApi-{serverAddress.Port}",
-				Name = "WebApi",
+                ID = $"webapi-{serverAddress.Port}",
+				Name = "webapi",
                 Address = $"{serverAddress.Scheme}://{serverAddress.Host}",
 				Port = serverAddress.Port,
 				Tags = new[] { "Flibble", "Wotsit", "Aardvark" },

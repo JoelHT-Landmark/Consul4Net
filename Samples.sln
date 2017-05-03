@@ -5,7 +5,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShowNodes", "ShowNodes\Show
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsulSamples", "ConsulSamples\ConsulSamples.csproj", "{B1A7D560-5799-4310-87CD-9FE86ACE74B9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi", "WebApi\WebApi.csproj", "{2D15927F-08C5-4D7B-864E-6BCFDBA5DC13}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPSLV-WebApi", "WebApi\RPSLV-WebApi.csproj", "{2D15927F-08C5-4D7B-864E-6BCFDBA5DC13}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
