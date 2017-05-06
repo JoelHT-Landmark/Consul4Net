@@ -107,6 +107,7 @@ namespace ConsulSamples
 			Console.WriteLine("ds / DeleteService - Delete all instances of a service");
 			Console.WriteLine("di / DeleteServiceInstance - Delete a specific service instance");
 			Console.WriteLine("gd / GetServiceByDns - Gets DNS entries for all instances of a regustered service.");
+			Console.WriteLine("gh / GetServiceHealth - Gets Health entries for all instances of a regustered service.");
 			Console.WriteLine("gk / GetKeyValue - Gets a key/value pair to the Consul KV store.");
 			Console.WriteLine("gs / GetService - Gets the instances of a registered service");
 			Console.WriteLine("lk / ListKeys - Lists the keys currently in the Consul KV store.");
@@ -271,6 +272,26 @@ namespace ConsulSamples
             }
         }
 
+		public static async Task GetServiceHealth()
+		{
+			Console.Write("Service > ");
+			var serviceName = Console.ReadLine();
+
+			using (var client = new Consul.ConsulClient())
+			{
+                var serviceResult = await client.Health.Service(serviceName);
+				var service = serviceResult.Response;
+
+				foreach (var serviceInstance in service)
+				{
+                    Console.WriteLine($"{serviceInstance.Service.ID} / {serviceInstance.Service.Address}");
+                    foreach (var check in serviceInstance.Checks)
+                    {
+                        Console.WriteLine($" - {check.CheckID} - {check.Status}");
+                    }
+				}
+			}
+		}
         public static async Task GetServiceByDns()
         {
 			Console.Write("Service > ");
